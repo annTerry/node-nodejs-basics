@@ -1,19 +1,23 @@
+import {Transform, pipeline} from 'node:stream';
 import process from 'node:process';
-import fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const readable = process.stdin;
+const writable = process.stdout;
 
 const transform = async () => {
   
-  process.stdin.on("data", data => { 
-    
-    }); 
-    process.on("exit", () => { 
-    writeStream.close();  
-    }); 
+  const transformStream = new Transform({transform(chunk, enc, cb) {
+    const chunkStringify = chunk.toString().trim();
+    const reverseChunk = chunkStringify.split('').reverse().join('');
+    this.push(reverseChunk + '\n');
+
+    cb();
+  }
+});
+
+  pipeline(readable, transformStream, writable, err => {
+    console.log(`Error:${err}`);
+  });
   };
 
 await transform();
