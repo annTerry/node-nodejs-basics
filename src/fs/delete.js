@@ -10,11 +10,10 @@ const remove = async () => {
   const baseFile = path.join(__dirname, 'files', 'fileToRemove.txt');
   try {
     await fs.access(baseFile);
-    await fs.unlink(baseFile, () => {
-      console.log("Successfully deleted file!");
-    });
+    await fs.unlink(baseFile);
+    console.log("Successfully deleted file!");
   } catch (err) {
-    console.log(err);
+    throw new Error("FS operation failed!");
   }
 };
 
