@@ -15,21 +15,22 @@ const getFilesFromDirectory = async (dir) => {
           if (stats.isDirectory()) {
               return getFilesFromDirectory(filePath);
           } else {
-              return filePath;
+              return file;
           }
       })
   );
-  return files; // return with empty arrays removed
+  return files;
 };
 
 const list = async () => {
   const filesPath = path.join(__dirname, 'files');
   try {
     await fs.access(filesPath);
-    console.log(await getFilesFromDirectory(filesPath));
+    const result = await getFilesFromDirectory(filesPath);
+    console.table(result.flat());
     }
     catch (err) {
-      console.log(err);
+      throw new Error("FS operation failed!");
     }
 };
 
