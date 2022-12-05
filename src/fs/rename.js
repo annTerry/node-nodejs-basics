@@ -10,18 +10,23 @@ const rename = async () => {
   const baseFile = path.join(__dirname, 'files', 'wrongFilename.txt');
   const newFile = path.join(__dirname, 'files', 'properFilename.md');
   try {
-    await fs.access(baseFile);
+    await fs.access(newFile);
     throw new Error("FS operation failed!");
-  } catch (err) {
-    try {
-      await fs.access(newFile);
+  }
+  catch (err) {
+    if (err.syscall && err.syscall === 'access') {
+      try {
+        await fs.access(baseFile);
+        await fs.rename(baseFile, newFile);
+        console.log("Successfully renamed!");
+      }
+      catch {
+        throw new Error("FS operation failed!");
+      }
+    }
+    else {
       throw new Error("FS operation failed!");
     }
-    catch {
-      await fs.rename(baseFile, newFile, () => {
-        console.log("Successfully renamed!");
-      });
-    }  
   }
 };
 
