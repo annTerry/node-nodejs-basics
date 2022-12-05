@@ -1,22 +1,21 @@
 import {Transform, pipeline} from 'node:stream';
 import process from 'node:process';
 
-const readable = process.stdin;
-const writable = process.stdout;
+const toRead = process.stdin;
+const toWrite = process.stdout;
 
 const transform = async () => {
   
-  const transformStream = new Transform({transform(chunk, enc, cb) {
-    const chunkStringify = chunk.toString().trim();
-    const reverseChunk = chunkStringify.split('').reverse().join('');
-    this.push(reverseChunk + '\n');
-
+  const transformStream = new Transform({transform(data, enc, cb) {
+    const dataAsString = data.toString().trim();
+    const transformData = dataAsString.toUpperCase().split('').join(' ');
+    this.push(transformData + '\n');
     cb();
   }
 });
 
-  pipeline(readable, transformStream, writable, err => {
-    console.log(`Error:${err}`);
+  pipeline(toRead, transformStream, toWrite, err => {
+    console.log(err);
   });
   };
 
