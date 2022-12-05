@@ -13,7 +13,12 @@ const remove = async () => {
     await fs.unlink(baseFile);
     console.log("Successfully deleted file!");
   } catch (err) {
-    throw new Error("FS operation failed!");
+    if (err.syscall && err.syscall === 'access') {
+      throw new Error("FS operation failed!");
+      }
+      else{
+        console.log(err);
+      }
   }
 };
 

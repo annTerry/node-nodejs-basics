@@ -14,7 +14,12 @@ const read = async () => {
     const data = await fs.readFile(baseFile, "utf8");
     console.log(Buffer.from(data).toString());
   } catch (err) {
-    console.log(err);
+    if (err.syscall && err.syscall === 'access') {
+      throw new Error("FS operation failed!");
+    }
+    else {
+      console.log(err);
+    }
   }
 };
 
