@@ -10,7 +10,7 @@ function runService(workerData) {
   return new Promise((resolve, reject) => {
     const worker = new Worker(path.join(__dirname, '/worker.js'), { workerData });
     worker.on('message', resolve);
-    worker.on('error', (reject) => {return {status: 'error', data: null}});
+    worker.on('error', () => {return {status: 'error', data: null}});
     worker.on('exit', (code) => {
       if (code !== 0)
         reject(new Error(`Worker stopped with exit code ${code}`));

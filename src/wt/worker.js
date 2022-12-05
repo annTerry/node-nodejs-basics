@@ -8,7 +8,14 @@ const getResult = (data) => {
 }
 
 const sendResult = () => {
-  parentPort.postMessage(getResult(workerData));
+  let result;
+  try {
+    result = getResult(workerData)
+  }
+  catch {
+    result =  {status: 'error', data: null};
+  }
+  parentPort.postMessage(result);
 };
 
 sendResult();
