@@ -15,14 +15,14 @@ const create = async () => {
         if (err.syscall && err.syscall === 'access') {
           const data = new Uint8Array(Buffer.from('I am fresh and young'));
           await fs.writeFile(baseFile, data, (err) => {
-            if (err) throw err;
-            console.log('The file has been saved!');
+            if (err) throw err;            
           });
+          console.log('The file has been saved!');
         }
         else {
-          console.log (err.message);
+          throw new Error("FS operation failed!");
         }
-    }
+    }    
 };
 
 await create();
